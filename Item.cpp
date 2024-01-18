@@ -6,7 +6,6 @@
 
 Item::Item(const std::string &n, int q) : name(n), qty(q) {
     if (q <= 0) {
-        // q is set to default (1)
-        q = 1;
+        throw std::out_of_range("NEGATIVE or ZERO item quantity");
     }
 }

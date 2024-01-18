@@ -11,8 +11,16 @@ void Category::addItem(const std::string &itemName, int itemQty) {
     if (itr!=items.end()){
         itr->second.setQty(itr->second.getQty() + itemQty);
     } else {
+
+        try {
             Item item(itemName, itemQty);
             items.insert(std::make_pair(itemName, item));
+        } catch (std::out_of_range& e) {
+            std::cerr << e.what() << "is set to default (1)" << std::endl;
+            Item item(itemName);
+            items.insert(std::make_pair(itemName, item));
+        }
+
     }
 }
 
