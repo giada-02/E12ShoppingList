@@ -3,4 +3,9 @@ project(ListaSpesa)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(ListaSpesa main.cpp Item.cpp Item.h ShoppingList.cpp ShoppingList.h Observer.h Subject.h User.cpp User.h Category.cpp Category.h)
+add_subdirectory(test)
+
+set(SOURCE_FILES Item.h Item.cpp Category.h Category.cpp ShoppingList.h ShoppingList.cpp User.h User.cpp Subject.h Observer.h)
+add_executable(ListaSpesa main.cpp)
+add_library(core ${SOURCE_FILES})
+target_link_libraries(ListaSpesa core)
