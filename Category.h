@@ -31,6 +31,8 @@ public:
         return sum;
     }
 
+    bool findItem(const std::string& itemName) const;
+
 private:
     std::string name;
     std::map<std::string, Item> items;

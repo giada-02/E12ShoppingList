@@ -41,3 +41,11 @@ void Category::printItems() const {
         std::cout << "Item: " << item.first << " - " << item.second.getQty() << std::endl;
     }
 }
+
+bool Category::findItem(const std::string &itemName) const {
+    auto itr = items.find(itemName);
+    if(itr != items.end())
+        return true;
+    else
+        return false;
+}
