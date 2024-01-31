@@ -6,32 +6,16 @@
 #include "../Item.h"
 
 TEST(Item, DefaultConstructor) {
-    try {
-        Item item("item");
-        ASSERT_EQ(1, item.getQty());
-    } catch (...) {
-        FAIL();
-    }
+    Item item("item");
+    ASSERT_EQ("item", item.getName());
+    ASSERT_EQ(1, item.getQty());
+    ASSERT_EQ(false, item.isBought());
 }
 
 TEST(Item, out_of_range_negative) {
-    try {
-        Item itemNegative("itemNegative", -2);
-        FAIL();
-    } catch (std::out_of_range &e) {
-        EXPECT_STREQ("NEGATIVE or ZERO item quantity", e.what());
-    } catch (...) {
-        FAIL();
-    }
+    ASSERT_THROW(Item itemNegative("itemNegative", -2), std::out_of_range);
 }
 
 TEST(Item, out_of_range_zero) {
-    try{
-        Item itemZero("itemZero", 0);
-        FAIL();
-    } catch(std::out_of_range &e) {
-        EXPECT_STREQ("NEGATIVE or ZERO item quantity", e.what());
-    } catch(...) {
-        FAIL();
-    }
+    ASSERT_THROW(Item itemZero("itemZero", 0), std::out_of_range);
 }

@@ -22,34 +22,52 @@ void ShoppingList::unsubscribe(Observer *o) {
     notify();
 }
 
-void ShoppingList::addItem(const std::string &ctyName, const std::string &itemName, int itemQty) {
+void ShoppingList::addItem(const std::string &ctyName, const std::string &itemName, int itemQty, bool bought) {
     auto itr = categories.find(ctyName);
     if(itr != categories.end()) { //category is already in the shopping list, must find item and add
-        itr->second.addItem(itemName, itemQty);
+        itr->second.addItem(itemName, itemQty, bought);
     } else { //category is not in the shopping list, it must be created, put the item in and added to the shopping list
         Category category(ctyName);
-        category.addItem(itemName, itemQty);
+        category.addItem(itemName, itemQty, bought);
         categories.insert(std::make_pair(ctyName, category));
     }
     notify();
 }
 
-void ShoppingList::removeItem(const std::string &ctyName, const std::string &itemName, int itemQty) {
+void ShoppingList::removeItem(const std::string &ctyName, const std::string &itemName) {
     auto itr = categories.find(ctyName);
     if(itr != categories.end()) { //category found, item removed
-        itr->second.removeItem(itemName, itemQty);
-        if(itr->second.getSize() == 0){ //if the category is empty it must be erased
-            categories.erase(ctyName);
+        try{
+            itr->second.removeItem(itemName);
+            if(itr->second.getSize() == 0){ //if the category is empty it must be erased
+                categories.erase(ctyName);
+            }
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
         }
     }
     notify();
 }
 
-void ShoppingList::removeItem(const std::string& itemName, int itemQty) {
-    for(auto itr = categories.begin(); itr != categories.end(); itr++) {
-        itr->second.removeItem(itemName, itemQty);
-        if (itr->second.getSize() == 0) { //if the category is empty it must be erased
-            categories.erase(itr->first);
+void ShoppingList::setItemBought(const std::string &ctyName, const std::string &itemName) {
+    auto itr = categories.find(ctyName);
+    if(itr != categories.end()) {
+        try{
+            itr->second.setItemBought(itemName);
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
+    notify();
+}
+
+void ShoppingList::setItemToBuy(const std::string &ctyName, const std::string &itemName) {
+    auto itr = categories.find(ctyName);
+    if(itr != categories.end()) {
+        try{
+            itr->second.setItemToBuy(itemName);
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
         }
     }
     notify();
@@ -60,13 +78,37 @@ void ShoppingList::printList() const {
     for(const auto& category : categories){
             category.second.printItems();
     }
-    std::cout << getNumItemsList() << " items in " << name << std::endl;
+    std::cout << "Total items in " << name << " : " << getNumItemsList()[0] << std::endl;
 }
 
-int ShoppingList::getNumItemsList() const {
-    int result = 0;
-    for(const auto& category : categories){
-        result += category.second.getNumItems();
+std::array<int, 3> ShoppingList::getNumItemsList() const {
+    std::array<int, 3> result = {0, 0, 0};
+    for (const auto& category : categories){
+        std::array<int, 3> resultCty = category.second.getNumItems();
+        result[1] += resultCty[1];
+        result[2] += resultCty[2];
     }
+    result[0] = result[1]+result[2];
     return result;
+}
+
+bool ShoppingList::findItem(const std::string &itemName) const {
+    bool found = false;
+    auto category = categories.begin();
+    while(category != categories.end() && found == false){
+        try {
+            const Item& foundItem = category->second.findItem(itemName); //if item not found in the category it throws exception
+            found = true; //if item found bool value found is set to true
+        } catch (std::invalid_argument &e){}
+        category++;
+    }
+    return found;
+}
+
+bool ShoppingList::findCategory(const std::string &ctyName) const {
+    auto cty = categories.find(ctyName);
+    if (cty != categories.end())
+        return true;
+    else
+        return false;
 }

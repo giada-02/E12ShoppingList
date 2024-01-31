@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <list>
+#include <memory>
 
 #include "Observer.h"
 #include "ShoppingList.h"
@@ -14,20 +15,22 @@
 class User : public Observer{
 public:
     explicit User(const std::string& userID);
-    virtual ~User(){}
+    virtual ~User();
 
     void update() override;
 
-    void addList(ShoppingList* list);
-    void removeList(ShoppingList* list);
-
+    void addList(std::shared_ptr<ShoppingList> list);
+    void removeList(std::shared_ptr<ShoppingList> list);
     void displayAll() const;
 
+    int getNumLists() const{
+        return lists.size();
+    }
 
 private:
     std::string userID;
-    int numItems;
-    std::list<ShoppingList*> lists;
+    std::array<int, 3> numItems;
+    std::list<std::shared_ptr<ShoppingList>> lists;
 };
 
 

@@ -15,23 +15,18 @@ class Category {
 public:
     explicit Category(const std::string& n);
 
-    void addItem(const std::string &itemName, int itemQty = 1);
-    void removeItem(const std::string &itemName, int itemQty = 1);
+    void addItem(const std::string &itemName, int itemQty = 1, bool bought = false);
+    void removeItem(const std::string &itemName);
+    void setItemBought(const std::string &itemName);
+    void setItemToBuy(const std::string &itemName);
+    std::array<int, 3> getNumItems() const;
     void printItems() const;
 
     int getSize() const{
         return items.size();
     }
 
-    int getNumItems() const{
-        int sum = 0;
-        for (const auto& item : items){
-            sum += item.second.getQty();
-        }
-        return sum;
-    }
-
-    bool findItem(const std::string& itemName) const;
+    const Item& findItem(const std::string& itemName) const;
 
 private:
     std::string name;

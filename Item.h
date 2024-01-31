@@ -10,21 +10,34 @@
 
 class Item {
 public:
-    explicit Item(const std::string& n, int q = 1);
+    explicit Item(const std::string& n, int q = 1, bool bought = false);
 
-    std::string getName() const{
+    const std::string& getName() const{
         return name;
     }
+
     int getQty() const{
         return qty;
     }
-    void setQty(int q){
+
+    void setQty(int q){ //quantity must be > 0
+        if (q<=0)
+            throw std::out_of_range("NEGATIVE or ZERO item quantity");
         qty = q;
-    };
+    }
+
+    bool isBought() const{
+        return bought;
+    }
+
+    void setBought(bool b){
+        bought = b;
+    }
 
 private:
     std::string name;
     int qty;
+    bool bought;
 };
 
 

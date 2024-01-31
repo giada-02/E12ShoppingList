@@ -24,11 +24,19 @@ public:
     void subscribe(Observer *o) override;
     void unsubscribe(Observer *o) override;
 
-    void addItem(const std::string &ctyName, const std::string &itemName, int itemQty = 1);
-    void removeItem(const std::string &ctyName, const std::string& itemName, int itemQty = 1); //removes selected item from selected category
-    void removeItem(const std::string& itemName, int itemQty = 1); //removes selected item from all categories
+    void addItem(const std::string &ctyName, const std::string &itemName, int itemQty = 1, bool bought = false);
+    void removeItem(const std::string &ctyName, const std::string &itemName);
+    void setItemBought(const std::string &ctyName, const std::string &itemName);
+    void setItemToBuy(const std::string &ctyName, const std::string &itemName);
+    std::array<int, 3> getNumItemsList() const;
     void printList() const;
-    int getNumItemsList() const;
+
+    int getSize() const{
+        return categories.size();
+    }
+
+    bool findItem(const std::string &itemName) const;
+    bool findCategory(const std::string &ctyName) const;
 
 private:
     std::string name;
